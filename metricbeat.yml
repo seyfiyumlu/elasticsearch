@@ -19,11 +19,7 @@ metricbeat.modules:
       - ml_job
       - node_stats
       - shard
-
-  - module: logstash
-    xpack.enabled: true
-    period: 10s
-    hosts: ${LOGSTASH_HOSTS}
+      - enrich
 
   - module: kibana
     metricsets:
