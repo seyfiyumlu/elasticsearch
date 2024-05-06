@@ -9,6 +9,11 @@ heartbeat.monitors:
     schedule: "@every 5s"
     urls:
       - http://kibana:5601
+  - type: http
+    name: "ApiGateway Monitor"
+    schedule: "@every 5m"
+    urls:
+      - https://sutasngmobile.sutas.com.tr/external-service/api/Token
 
 processors:
   - add_cloud_metadata: ~

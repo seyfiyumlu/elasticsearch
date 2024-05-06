@@ -7,8 +7,6 @@ metricbeat.modules:
     xpack.enabled: true
     period: 10s
     hosts: ${ELASTIC_HOSTS}
-    username: ${ELASTIC_USER}
-    password: ${ELASTIC_PASSWORD}
     ssl.enabled: false
     metricsets:
       - ccr
@@ -26,8 +24,6 @@ metricbeat.modules:
       - stats
     period: 10s
     hosts: ${KIBANA_HOSTS}
-    username: ${ELASTIC_USER}
-    password: ${ELASTIC_PASSWORD}
     xpack.enabled: true
 
   - module: docker
