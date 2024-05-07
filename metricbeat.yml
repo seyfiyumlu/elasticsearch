@@ -46,5 +46,3 @@ processors:
 
 output.elasticsearch:
   hosts: ${ELASTIC_HOSTS}
-  username: ${ELASTIC_USER}
-  password: ${ELASTIC_PASSWORD}
