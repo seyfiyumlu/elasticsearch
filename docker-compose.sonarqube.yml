@@ -1,0 +1,52 @@
+version: "3.8"
+
+volumes:
+  sonardata:
+    driver: local
+  sonarlogs:
+    driver: local
+  sonarextensions:
+    driver: local
+
+networks:
+  default:
+    name: sonarqube
+    external: false
+
+services:
+  db:
+    image: postgres
+    container_name: postgres
+    ports:
+      - ${POSTGRES_PORT}:5432
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=sonar
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "sonar"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    mem_limit: ${POSTGRES_MEM_LIMIT}
+  sonarqube:
+    image: sonarqube
+    container_name: sonarqube
+    ports:
+      - ${SONARQUBE_PORT}:9000
+    volumes:
+      - sonardata:/opt/sonarqube/data
+      - sonarlogs:/opt/sonarqube/logs
+      - sonarextensions:/opt/sonarqube/extensions
+    environment:
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
+      - SONARQUBE_JDBC_USERNAME=${POSTGRES_USER}
+      - SONARQUBE_JDBC_PASSWORD=${POSTGRES_PASSWORD}
+    depends_on:
+      - db
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    mem_limit: ${SONARQUBE_MEM_LIMIT}

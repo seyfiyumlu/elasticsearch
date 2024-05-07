@@ -1,0 +1,28 @@
+version: "3.8"
+
+volumes:
+  rabbitmqdata:
+    driver: local
+
+networks:
+  default:
+    name: rabbitmq
+    external: false
+services:
+  rabbitmq:
+    image: rabbitmq:${RABBITMQ_VERSION}-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmqdata:/var/lib/rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    mem_limit: ${RABBITMQ_MEM_LIMIT}
