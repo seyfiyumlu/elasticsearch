@@ -7,6 +7,8 @@ volumes:
     driver: local
   sonarextensions:
     driver: local
+  postgresdata:
+    driver: local
 
 networks:
   default:
@@ -19,6 +21,8 @@ services:
     container_name: postgres
     ports:
       - ${POSTGRES_PORT}:5432
+    volumes:
+      - postgresdata:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -29,6 +33,21 @@ services:
       timeout: 5s
       retries: 5
     mem_limit: ${POSTGRES_MEM_LIMIT}
+  adminer:
+    image: adminer
+    container_name: adminer
+    ports:
+      - ${ADMINER_PORT}:8080
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    mem_limit: ${ADMINER_MEM_LIMIT}
+
   sonarqube:
     image: sonarqube
     container_name: sonarqube
@@ -38,12 +57,15 @@ services:
       - sonardata:/opt/sonarqube/data
       - sonarlogs:/opt/sonarqube/logs
       - sonarextensions:/opt/sonarqube/extensions
+      - ./sonar.properties:/opt/sonarqube/conf/sonar.properties
     environment:
       - SONARQUBE_JDBC_URL=jdbc:postgresql://db:5432/sonar
       - SONARQUBE_JDBC_USERNAME=${POSTGRES_USER}
       - SONARQUBE_JDBC_PASSWORD=${POSTGRES_PASSWORD}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000"]
       interval: 10s
