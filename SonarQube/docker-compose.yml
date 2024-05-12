@@ -23,6 +23,7 @@ services:
       - ${POSTGRES_PORT}:5432
     volumes:
       - postgresdata:/var/lib/postgresql/data
+    restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -41,6 +42,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 10s
@@ -53,6 +55,7 @@ services:
     container_name: sonarqube
     ports:
       - ${SONARQUBE_PORT}:9000
+    restart: always
     volumes:
       - sonardata:/opt/sonarqube/data
       - sonarlogs:/opt/sonarqube/logs

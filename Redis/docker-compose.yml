@@ -31,6 +31,7 @@ services:
     container_name: redis-commander
     ports:
       - 8081:8081
+    restart: always
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=${REDIS_PORT}
