@@ -1,0 +1,73 @@
+version: "3.8"
+
+services:
+  rabbitmq1:
+    image: rabbitmq:3.13.2-management
+    hostname: rabbitmq1
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "supersecretcookie"
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    networks:
+      - rabbitmq_network
+    command: >
+      sh -c "rabbitmq-server & sleep 30 &&
+      rabbitmqctl stop_app &&
+      rabbitmqctl reset &&
+      rabbitmqctl start_app &&
+      tail -f /dev/null"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  rabbitmq2:
+    image: rabbitmq:3.13.2-management
+    hostname: rabbitmq2
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "supersecretcookie"
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+    networks:
+      - rabbitmq_network
+    command: >
+      sh -c "rabbitmq-server & sleep 30 &&
+      rabbitmqctl stop_app &&
+      rabbitmqctl reset &&
+      while ! rabbitmqctl node_health_check --node rabbit@rabbitmq1; do sleep 5; done &&
+      rabbitmqctl join_cluster rabbit@rabbitmq1 &&
+      rabbitmqctl start_app &&
+      tail -f /dev/null"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+  rabbitmq3:
+    image: rabbitmq:3.13.2-management
+    hostname: rabbitmq3
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "supersecretcookie"
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+    networks:
+      - rabbitmq_network
+    command: >
+      sh -c "rabbitmq-server & sleep 30 &&
+      rabbitmqctl stop_app &&
+      rabbitmqctl reset &&
+      while ! rabbitmqctl node_health_check --node rabbit@rabbitmq1; do sleep 5; done &&
+      rabbitmqctl join_cluster rabbit@rabbitmq1 &&
+      rabbitmqctl start_app &&
+      tail -f /dev/null"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+
+networks:
+  rabbitmq_network:
+    external: true
