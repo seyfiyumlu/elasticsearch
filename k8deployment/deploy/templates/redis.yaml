@@ -73,7 +73,7 @@ kind: Service
 apiVersion: v1
 metadata:
   name: redis
-  namespace: {{ .values.namespace }}
+  namespace: {{ .Values.namespace }}
   labels:
     app: vizyoneks
     service: redis
