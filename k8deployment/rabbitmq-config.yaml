@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: rabbitmq-config
-data:
-  RABBITMQ_VERSION: "3.8"

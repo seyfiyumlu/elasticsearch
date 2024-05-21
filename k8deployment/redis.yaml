@@ -1,0 +1,47 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: redis
+  namespace: { { .Values.namespace } }
+  labels:
+    app: vizyoneks
+    service: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: redis
+  template:
+    metadata:
+      labels:
+        app: vizyoneks
+        service: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis
+          imagePullPolicy: IfNotPresent
+          args:
+            - "--requirepass {{ .Values.redisPassword }}"
+          ports:
+            - name: redis
+              containerPort: 6379
+              protocol: TCP
+      automountServiceAccountToken: false
+kind: Service
+apiVersion: v1
+metadata:
+  name: redis
+  namespace: { { .Values.namespace } }
+  labels:
+    app: vizyoneks
+    service: redis
+spec:
+  selector:
+    app: vizyoneks
+    service: redis
+  ports:
+    - name: redis
+      port: 6379
+      targetPort: 6379
+  type: ClusterIP
