@@ -13,7 +13,7 @@ metadata:
 spec:
     ingressClassName: nginx
     rules:
-      - host: redisk8s.vizyoneks.com
+      - host: redisk8s.vizyoneks.com.tr
         http:
           paths:
             - path: /
