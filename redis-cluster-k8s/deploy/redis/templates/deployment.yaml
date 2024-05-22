@@ -122,10 +122,10 @@ spec:
         resources:
           requests:
             storage: "{{ .Values.persistence.size }}"
-  volumes:
-    - name: redis-cluster-config
-      configMap:
-        name: redis-cluster-config
+      volumes:
+        - name: redis-cluster-config
+          configMap:
+            name: redis-cluster-config
 
 ---
 
