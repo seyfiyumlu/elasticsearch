@@ -1,4 +1,5 @@
 replicaCount: 3
+namespace: redis-cluster
 
 image:
   repository: redis

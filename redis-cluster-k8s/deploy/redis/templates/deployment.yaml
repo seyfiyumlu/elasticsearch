@@ -1,10 +1,8 @@
-# templates/deployment.yaml
-# templates/statefulset.yaml
-
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: redis-cluster
+  namespace: {{ .Values.namespace }}
 spec:
   serviceName: "redis-cluster"
   replicas: {{ .Values.replicaCount }}
@@ -18,6 +16,7 @@ spec:
     spec:
       containers:
         - name: redis-cluster
+          namespace: {{ .Values.namespace }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 6379
@@ -28,6 +27,7 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: redis-cluster-data
+        namespace: {{ .Values.namespace }}
       spec:
         accessModes: [ "{{ .Values.persistence.accessMode }}" ]
         resources:
@@ -41,6 +41,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: redis-cluster
+  namespace: {{ .Values.namespace }}
 spec:
   ports:
     - port: 6379
