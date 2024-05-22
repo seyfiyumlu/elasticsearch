@@ -67,6 +67,8 @@ spec:
     storage: {{ .Values.persistence.size }}
   accessModes:
     - {{ .Values.persistence.accessMode }}
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: {{ .Values.persistence.storageClass }}
   hostPath:
     path: /mnt/data
 
@@ -82,6 +84,7 @@ spec:
   resources:
     requests:
       storage: {{ .Values.persistence.size }}
+  storageClassName: {{ .Values.persistence.storageClass }}
 
 ---
 
