@@ -53,7 +53,7 @@ spec:
     spec:
       containers:
         - name: redis
-          image: redis
+          image: redis:alpine
           imagePullPolicy: IfNotPresent
           args:
             - "--requirepass {{ .Values.redisPassword }}"
