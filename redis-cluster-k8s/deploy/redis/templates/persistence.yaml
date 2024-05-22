@@ -1,5 +1,3 @@
-# templates/persistence.yaml
-
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -12,7 +10,6 @@ spec:
     - {{ .Values.persistence.accessMode }}
   hostPath:
     path: /mnt/data
-
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
