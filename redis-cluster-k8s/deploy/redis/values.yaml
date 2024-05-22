@@ -1,0 +1,5 @@
+# values.yaml
+persistence:
+  storageClass: ""
+  accessMode: ReadWriteOnce
+  size: 1Gi
