@@ -88,10 +88,11 @@ metadata:
     service: redis
 spec:
   selector:
-    app: vizyoneks
-    service: redis
+    type: LoadBalancer
+    selector:
+      app: vizyoneks
+      service: redis
   ports:
     - name: redis
       port: 6379
       targetPort: 6379
-  type: ClusterIP

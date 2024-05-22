@@ -1,25 +1,25 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: vizyoneks-ingress
-  namespace: {{ .Values.namespace }}
-  annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
-    nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
-  labels:
-    app: vizyoneks
-    service: ingress
-spec:
-    ingressClassName: nginx
-    rules:
-      - host: redisk8s.vizyoneks.com.tr
-        http:
-          paths:
-            - path: /
-              pathType: Prefix
-              backend:
-                service:
-                  name: redis
-                  port:
-                    number: 6379
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: vizyoneks-ingress
+#   namespace: {{ .Values.namespace }}
+#   annotations:
+#     nginx.ingress.kubernetes.io/rewrite-target: /
+#     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+#     nginx.ingress.kubernetes.io/proxy-ssl-verify: "false"
+#   labels:
+#     app: vizyoneks
+#     service: ingress
+# spec:
+#     ingressClassName: nginx
+#     rules:
+#       - host: redisk8s.vizyoneks.com.tr
+#         http:
+#           paths:
+#             - path: /
+#               pathType: Prefix
+#               backend:
+#                 service:
+#                   name: redis
+#                   port:
+#                     number: 6379
