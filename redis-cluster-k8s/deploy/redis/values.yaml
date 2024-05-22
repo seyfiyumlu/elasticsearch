@@ -3,7 +3,7 @@ namespace: redis-cluster
 
 image:
   repository: redis
-  tag: "6.2"
+  tag: "alpine"
   pullPolicy: IfNotPresent
 
 service:
@@ -11,7 +11,7 @@ service:
   port: 6379
 
 persistence:
-  storageClass: ""
+  storageClass: "manual"
   accessMode: ReadWriteOnce
   size: 1Gi
 
