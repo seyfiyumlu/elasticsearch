@@ -55,7 +55,6 @@ data:
     rename-command MEMORY ""
     rename-command LATENCY ""
     rename-command ACL ""
-
 ---
 
 apiVersion: v1
@@ -70,6 +69,7 @@ spec:
     - {{ .Values.persistence.accessMode }}
   hostPath:
     path: /mnt/data
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -113,19 +113,19 @@ spec:
               mountPath: /usr/local/etc/redis/redis.conf
               subPath: redis.conf
           command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--cluster-enabled", "yes", "--appendonly", "yes"]
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-cluster-data
+      spec:
+        accessModes: [ "{{ .Values.persistence.accessMode }}" ]
+        resources:
+          requests:
+            storage: "{{ .Values.persistence.size }}"
   volumes:
     - name: redis-cluster-config
       configMap:
         name: redis-cluster-config
 
-  volumeClaimTemplates:
-      - metadata:
-          name: redis-cluster-data
-        spec:
-          accessModes: [ "{{ .Values.persistence.accessMode }}" ]
-          resources:
-            requests:
-              storage: "{{ .Values.persistence.size }}"
 
 ---
 
@@ -141,4 +141,5 @@ spec:
   clusterIP: None
   selector:
     app: redis-cluster
+
 
