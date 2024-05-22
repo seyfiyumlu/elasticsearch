@@ -34,33 +34,7 @@ spec:
           requests:
             storage: "{{ .Values.persistence.size }}"
 
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: redis-cluster
-spec:
-  replicas: 2
-  selector:
-    matchLabels:
-      app: redis-cluster
-  template:
-    metadata:
-      labels:
-        app: redis-cluster
-    spec:
-      containers:
-        - name: redis-cluster-container
-          image: nginx:latest
-          ports:
-            - containerPort: 80
-          volumeMounts:
-            - name: redis-cluster-storage
-              mountPath: /usr/share/nginx/html
-      volumes:
-        - name: redis-cluster-storage
-          persistentVolumeClaim:
-            claimName: redis-cluster-pvc
+
 ---
 
 apiVersion: v1
