@@ -16,14 +16,13 @@ spec:
     spec:
       containers:
         - name: redis-cluster
-          namespace: {{ .Values.namespace }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           ports:
             - containerPort: 6379
           volumeMounts:
             - name: redis-cluster-data
               mountPath: /data
-          command: ["redis-cluster-server", "--cluster-enabled", "yes", "--appendonly", "yes"]
+          command: ["redis-server", "/data/redis.conf", "--cluster-enabled", "yes", "--appendonly", "yes"]
   volumeClaimTemplates:
     - metadata:
         name: redis-cluster-data
@@ -33,7 +32,6 @@ spec:
         resources:
           requests:
             storage: "{{ .Values.persistence.size }}"
-
 
 ---
 
@@ -49,3 +47,4 @@ spec:
   clusterIP: None
   selector:
     app: redis-cluster
+
