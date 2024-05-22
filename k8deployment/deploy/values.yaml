@@ -1,2 +1,2 @@
 namespace: vizyoneksk8s
-redisPassword: "ServicePasword"
+redisPassword: ServicePasword
