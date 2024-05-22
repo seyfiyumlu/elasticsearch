@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: my-app-pv
+  name: redis-cluster-pv
 spec:
   capacity:
     storage: {{ .Values.persistence.size }}
@@ -16,7 +16,7 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: my-app-pvc
+  name: redis-cluster-pvc
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode }}
