@@ -69,20 +69,6 @@ parameters:
   archiveOnDelete: "false"
 
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: nfs-dynamic-pvc
-  namespace: {{ .Values.namespace }}
-spec:
-  accessModes:
-    - ReadWriteMany
-  resources:
-    requests:
-      storage: 5Gi
-  storageClassName: nfs-client
-
----
 
 apiVersion: apps/v1
 kind: StatefulSet
