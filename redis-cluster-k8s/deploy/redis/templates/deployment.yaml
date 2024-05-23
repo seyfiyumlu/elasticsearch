@@ -85,17 +85,21 @@ spec:
         app: redis-cluster
     spec:
       containers:
-        - name: redis-cluster
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          ports:
-            - containerPort: 6379
-          volumeMounts:
-            - name: data
-              mountPath: /data
-            - name: redis-cluster-config
-              mountPath: /usr/local/etc/redis/redis.conf
-              subPath: redis.conf
-          command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--cluster-enabled", "yes", "--appendonly", "yes"]
+      - name: redis-cluster
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        ports:
+        - containerPort: 6379
+        volumeMounts:
+        - name: redis-storage
+          mountPath: /data
+        - name: redis-cluster-config
+          mountPath: /usr/local/etc/redis/redis.conf
+          subPath: redis.conf
+        command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--cluster-enabled", "yes", "--appendonly", "yes"]
+      volumes:
+      - name: redis-cluster-config
+        configMap:
+          name: redis-cluster-config
   volumeClaimTemplates:
     - metadata:
         name: data
@@ -105,11 +109,6 @@ spec:
         resources:
           requests:
             storage: "{{ .Values.persistence.size }}"
-  volumes:
-    - name: redis-cluster-config
-      configMap:
-        name: redis-cluster-config
-
 
 ---
 
