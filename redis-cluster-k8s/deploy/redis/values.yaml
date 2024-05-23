@@ -3,7 +3,7 @@ namespace: redis-ns
 
 image:
   repository: redis
-  tag: "alpine"
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 service:
