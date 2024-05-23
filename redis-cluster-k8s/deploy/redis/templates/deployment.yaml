@@ -131,6 +131,51 @@ subjects:
 - kind: ServiceAccount
   name: local-provisioner-sa
   namespace: kube-system
+---
+
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: setup-disks
+  namespace: kube-system
+spec:
+  selector:
+    matchLabels:
+      app: setup-disks
+  template:
+    metadata:
+      labels:
+        app: setup-disks
+    spec:
+      containers:
+      - name: setup-disks
+        image: busybox
+        command: ["/bin/sh"]
+        args: ["-c", "dd if=/dev/zero of=/mnt/disks/redis-test.img bs=1M count=1024 && \
+                mkfs.ext4 /mnt/disks/redis-test.img && \
+                mkdir -p /mnt/disks/redis-test && \
+                mount -o loop /mnt/disks/redis-test.img /mnt/disks/redis-test && \
+                chmod 777 /mnt/disks/redis-test && \
+                dd if=/dev/zero of=/mnt/disks/redis-test-1.img bs=1M count=1024 && \
+                mkfs.ext4 /mnt/disks/redis-test-1.img && \
+                mkdir -p /mnt/disks/redis-test-1 && \
+                mount -o loop /mnt/disks/redis-test-1.img /mnt/disks/redis-test-1 && \
+                chmod 777 /mnt/disks/redis-test-1 && \
+                while true; do sleep 3600; done"]
+        volumeMounts:
+        - name: local-disks
+          mountPath: /mnt/disks
+      volumes:
+      - name: local-disks
+        hostPath:
+          path: /mnt/disks
+      tolerations:
+      - key: node.kubernetes.io/not-ready
+        operator: Exists
+        effect: NoSchedule
+      - key: node.kubernetes.io/unreachable
+        operator: Exists
+        effect: NoSchedule
 
 
 ---
