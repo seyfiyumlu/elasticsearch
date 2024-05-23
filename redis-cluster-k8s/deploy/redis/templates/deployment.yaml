@@ -101,7 +101,7 @@ spec:
       volumes:
       - name: nfs-storage
         persistentVolumeClaim:
-        claimName: nfs-dynamic-pvc
+        claimName: nfs-pvc
       - name: redis-cluster-config
         configMap:
           name: redis-cluster-config
