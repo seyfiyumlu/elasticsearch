@@ -149,17 +149,22 @@ spec:
     spec:
       containers:
       - name: setup-disks
-        image: busybox
+        image: alpine
+        securityContext:
+          privileged: true
         command: ["/bin/sh"]
-        args: ["-c", "dd if=/dev/zero of=/mnt/disks/redis-test.img bs=1M count=1024 && \
-                mkfs.ext4 /mnt/disks/redis-test.img && \
+        args: ["-c", "apk add --no-cache e2fsprogs && \
+                dd if=/dev/zero of=/mnt/disks/redis-test.img bs=1M count=1024 && \
+                losetup /dev/loop0 /mnt/disks/redis-test.img && \
+                mkfs.ext4 /dev/loop0 && \
                 mkdir -p /mnt/disks/redis-test && \
-                mount -o loop /mnt/disks/redis-test.img /mnt/disks/redis-test && \
+                mount /dev/loop0 /mnt/disks/redis-test && \
                 chmod 777 /mnt/disks/redis-test && \
                 dd if=/dev/zero of=/mnt/disks/redis-test-1.img bs=1M count=1024 && \
-                mkfs.ext4 /mnt/disks/redis-test-1.img && \
+                losetup /dev/loop1 /mnt/disks/redis-test-1.img && \
+                mkfs.ext4 /dev/loop1 && \
                 mkdir -p /mnt/disks/redis-test-1 && \
-                mount -o loop /mnt/disks/redis-test-1.img /mnt/disks/redis-test-1 && \
+                mount /dev/loop1 /mnt/disks/redis-test-1 && \
                 chmod 777 /mnt/disks/redis-test-1 && \
                 while true; do sleep 3600; done"]
         volumeMounts:
