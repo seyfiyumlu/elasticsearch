@@ -11,7 +11,7 @@ service:
   port: 6379
 
 persistence:
-  storageClass: "standard"
+  storageClass: "local-storage"
   accessMode: ReadWriteOnce
   size: 1Gi
 
