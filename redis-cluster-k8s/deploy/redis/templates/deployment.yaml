@@ -103,7 +103,7 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 6379
+    - port: 8080
       targetPort: 6379
       protocol: TCP
       name: redis
