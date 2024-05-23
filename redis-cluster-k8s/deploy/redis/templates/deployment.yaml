@@ -102,7 +102,7 @@ spec:
           name: redis-cluster-config
   volumeClaimTemplates:
     - metadata:
-        name: data
+        name: redis-storage
       spec:
         storageClassName: "{{ .Values.persistence.storageClass }}"
         accessModes: [ "{{ .Values.persistence.accessMode }}" ]
