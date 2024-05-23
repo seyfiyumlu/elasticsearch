@@ -105,6 +105,11 @@ spec:
     spec:
       containers:
       - name: provisioner
+        env:
+        - name: MY_NODE_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: spec.nodeName
         image: quay.io/external_storage/local-volume-provisioner:latest
         volumeMounts:
         - mountPath: /mnt/disks
