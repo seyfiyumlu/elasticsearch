@@ -93,7 +93,7 @@ spec:
         - containerPort: 6379
         volumeMounts:
         - name: nfs-storage
-          mountPath: /mnt
+          mountPath: /data
         - name: redis-cluster-config
           mountPath: /usr/local/etc/redis/redis.conf
           subPath: redis.conf
