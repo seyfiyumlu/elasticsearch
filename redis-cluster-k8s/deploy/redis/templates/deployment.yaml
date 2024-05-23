@@ -70,9 +70,6 @@ data:
       blockCleanerCommand:
         - "/scripts/shred.sh"
         - "2"
-      blockCleanerCommand:
-        - "/scripts/delete-files.sh"
-        - "2"
       volumeMode: Filesystem
       fsType: ext4
       recycler:
@@ -80,13 +77,14 @@ data:
           - "/scripts/shred.sh"
           - "2"
         timeout: 60
-      storageClassName: local-storage
+      storageClassName: {{ .Values.persistence.storageClass }}
+
 
 ---
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
 metadata:
-  name: local-storage
+  name: {{ .Values.persistence.storageClass }}
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 
@@ -115,7 +113,7 @@ spec:
           name: local-disks
         - mountPath: /etc/provisioner/config
           name: provisioner-config
-          subPath: storageClassMap
+          subPath: storageClassMap  # subPath ile ConfigMap içindeki doğru dosyayı belirtiyoruz
       volumes:
       - name: local-disks
         hostPath:
@@ -123,6 +121,7 @@ spec:
       - name: provisioner-config
         configMap:
           name: local-provisioner-config
+
 
 ---
 
