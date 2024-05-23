@@ -1,5 +1,5 @@
-replicaCount: 3
-namespace: redis-cluster
+replicaCount: 5
+namespace: redis-ns
 
 image:
   repository: redis
@@ -11,7 +11,7 @@ service:
   port: 6379
 
 persistence:
-  storageClass: "standard"
+  storageClass: "manual"
   accessMode: ReadWriteOnce
   size: 1Gi
 

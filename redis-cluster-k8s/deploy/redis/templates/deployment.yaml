@@ -110,7 +110,7 @@ spec:
           ports:
             - containerPort: 6379
           volumeMounts:
-            - name: redis-cluster-data
+            - name: data
               mountPath: /data
             - name: redis-cluster-config
               mountPath: /usr/local/etc/redis/redis.conf
@@ -118,7 +118,7 @@ spec:
           command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--cluster-enabled", "yes", "--appendonly", "yes"]
   volumeClaimTemplates:
     - metadata:
-        name: redis-cluster-data
+        name: data
       spec:
         accessModes: [ "{{ .Values.persistence.accessMode }}" ]
         resources:
@@ -144,5 +144,3 @@ spec:
   clusterIP: None
   selector:
     app: redis-cluster
-
-
