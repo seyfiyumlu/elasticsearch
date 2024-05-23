@@ -87,6 +87,51 @@ metadata:
 provisioner: kubernetes.io/no-provisioner
 volumeBindingMode: WaitForFirstConsumer
 
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: local-provisioner-sa
+  namespace: kube-system
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: local-provisioner-role
+rules:
+- apiGroups: [""]
+  resources: ["nodes", "persistentvolumes"]
+  verbs: ["get", "list", "watch", "create", "delete", "update"]
+- apiGroups: ["storage.k8s.io"]
+  resources: ["storageclasses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: [""]
+  resources: ["persistentvolumeclaims", "events"]
+  verbs: ["get", "list", "watch", "update"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get"]
+- apiGroups: [""]
+  resources: ["namespaces"]
+  verbs: ["get"]
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: local-provisioner-binding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: local-provisioner-role
+subjects:
+- kind: ServiceAccount
+  name: local-provisioner-sa
+  namespace: kube-system
+
 
 ---
 apiVersion: apps/v1
@@ -103,6 +148,7 @@ spec:
       labels:
         app: local-volume-provisioner
     spec:
+      serviceAccountName: local-provisioner-sa
       containers:
       - name: provisioner
         env:
