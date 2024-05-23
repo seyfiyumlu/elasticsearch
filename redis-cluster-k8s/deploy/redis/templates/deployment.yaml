@@ -57,34 +57,13 @@ data:
     rename-command ACL ""
 ---
 
-apiVersion: v1
-kind: PersistentVolume
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
-  name: redis-cluster-pv
-  namespace: {{ .Values.namespace }}
-spec:
-  capacity:
-    storage: {{ .Values.persistence.size }}
-  accessModes:
-    - {{ .Values.persistence.accessMode }}
-  persistentVolumeReclaimPolicy: Retain
-  storageClassName: {{ .Values.persistence.storageClass }}
-  hostPath:
-    path: /mnt/data
+  name: {{ .Values.persistence.storageClass }}
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
 
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: redis-cluster-pvc
-  namespace: {{ .Values.namespace }}
-spec:
-  accessModes:
-    - {{ .Values.persistence.accessMode }}
-  resources:
-    requests:
-      storage: {{ .Values.persistence.size }}
-  storageClassName: {{ .Values.persistence.storageClass }}
 
 ---
 
@@ -120,6 +99,7 @@ spec:
     - metadata:
         name: data
       spec:
+        storageClassName: "{{ .Values.persistence.storageClass }}"
         accessModes: [ "{{ .Values.persistence.accessMode }}" ]
         resources:
           requests:
