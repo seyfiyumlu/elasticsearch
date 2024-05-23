@@ -292,6 +292,7 @@ spec:
     - metadata:
         name: redis-storage
       spec:
+        reclaimPolicy: Retain
         storageClassName: "{{ .Values.persistence.storageClass }}"
         accessModes: [ "{{ .Values.persistence.accessMode }}" ]
         resources:
