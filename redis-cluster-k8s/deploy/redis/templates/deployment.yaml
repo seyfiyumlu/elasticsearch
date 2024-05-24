@@ -4,59 +4,19 @@ metadata:
   name: redis-cluster-config
   namespace: {{ .Values.namespace }}
 data:
-  redis.conf: |
-    bind 0.0.0.0
-    protected-mode yes
-    port 6379
-    tcp-backlog 511
-    timeout 0
-    tcp-keepalive 300
-    daemonize no
-    supervised no
-    pidfile /var/run/redis_6379.pid
-    loglevel notice
-    logfile ""
-    databases 16
-    always-show-logo yes
-    save 900 1
-    save 300 10
-    save 60 10000
-    stop-writes-on-bgsave-error yes
-    rdbcompression yes
-    rdbchecksum yes
-    dbfilename dump.rdb
-    dir ./
-    requirepass ServicePassword
-    rename-command FLUSHDB ""
-    rename-command FLUSHALL ""
-    rename-command CONFIG ""
-    rename-command SHUTDOWN ""
-    rename-command BGREWRITEAOF ""
-    rename-command BGSAVE ""
-    rename-command SAVE ""
-    rename-command RESTORE ""
-    rename-command MIGRATE ""
-    rename-command DUMP ""
-    rename-command DEBUG ""
-    rename-command OBJECT ""
-    rename-command MONITOR ""
-    rename-command SLAVEOF ""
-    rename-command REPLICAOF ""
-    rename-command ROLE ""
-    rename-command PUBLISH ""
-    rename-command PUBSUB ""
-    rename-command SCRIPT ""
-    rename-command SLOWLOG ""
-    rename-command SYNC ""
-    rename-command PSYNC ""
-    rename-command CLIENT ""
-    rename-command CLUSTER ""
-    rename-command INFO ""
-    rename-command MEMORY ""
-    rename-command LATENCY ""
-    rename-command ACL ""
-
-
+  update-node.sh: |
+    #!/bin/sh
+    REDIS_NODES="/data/nodes.conf"
+    sed -i -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/${POD_IP}/" ${REDIS_NODES}
+    exec "$@"
+  redis.conf: |+
+    cluster-enabled yes
+    cluster-require-full-coverage no
+    cluster-node-timeout 15000
+    cluster-config-file /data/nodes.conf
+    cluster-migration-barrier 1
+    appendonly yes
+    protected-mode no
 
 ---
 
@@ -114,24 +74,33 @@ spec:
         app: redis-cluster
     spec:
       containers:
-      - name: redis-cluster
+      - name: redis
         image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
         ports:
         - containerPort: 6379
+          name: client
+        - containerPort: 16379
+          name: gossip
+        command: ["/conf/update-node.sh", "redis-server", "/conf/redis.conf"]
+        env:
+        - name: POD_IP
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
         volumeMounts:
         - name: nfs-storage
           mountPath: /data
         - name: redis-cluster-config
           mountPath: /usr/local/etc/redis/redis.conf
           subPath: redis.conf
-        command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--cluster-enabled", "yes", "--appendonly", "yes"]
       volumes:
       - name: nfs-storage
         persistentVolumeClaim:
-        claimName: nfs-pvc
+        claimName: nfs-dynamic-pvc
       - name: redis-cluster-config
         configMap:
           name: redis-cluster-config
+          defaultMode: 0755
 ---
 
 apiVersion: v1
@@ -146,5 +115,10 @@ spec:
       targetPort: 6379
       protocol: TCP
       name: redis
+    - port: 8081
+      targetPort: 16379
+      protocol: TCP
+      name: gossip
   selector:
     app: redis-cluster
+

@@ -1,9 +1,9 @@
-replicaCount: 5
+replicaCount: 6
 namespace: redis-ns
 
 image:
   repository: redis
-  tag: "latest"
+  tag: "alpine"
   pullPolicy: IfNotPresent
 
 service:
