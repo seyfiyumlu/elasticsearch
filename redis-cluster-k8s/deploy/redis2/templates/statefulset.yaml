@@ -20,6 +20,7 @@ data:
     bind 0.0.0.0
     protected-mode no
     requirepass ServicePassword
+    masterauth ServicePassword
 ---
 apiVersion: apps/v1
 kind: StatefulSet
