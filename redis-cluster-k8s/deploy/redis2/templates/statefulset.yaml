@@ -17,6 +17,7 @@ data:
     cluster-config-file /data/nodes.conf
     cluster-migration-barrier 1
     appendonly yes
+    bind 0.0.0.0
     protected-mode no
     requirepass ServicePassword
 ---
