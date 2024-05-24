@@ -1,0 +1,5 @@
+apiVersion: v2
+name: redis-cluster
+description: A Helm chart for Kubernetes redis cluster
+version: 0.1.0
+appVersion: "1.0"
