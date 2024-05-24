@@ -88,7 +88,7 @@ spec:
             fieldRef:
               fieldPath: status.podIP
         volumeMounts:
-        - name: nfs-storage
+        - name: data
           mountPath: /data
         - name: conf
           mountPath: /conf
