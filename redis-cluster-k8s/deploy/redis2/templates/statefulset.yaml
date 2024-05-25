@@ -59,6 +59,24 @@ spec:
         - name: data
           mountPath: /data
           readOnly: false
+        livenessProbe:
+            exec:
+              command:
+              - redis-cli
+              - -a
+              - ServicePassword
+              - ping
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            exec:
+              command:
+              - redis-cli
+              - -a
+              - ServicePassword
+              - ping
+            initialDelaySeconds: 5
+            periodSeconds: 10
       volumes:
       - name: conf
         configMap:
