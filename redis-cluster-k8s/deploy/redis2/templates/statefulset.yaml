@@ -8,23 +8,16 @@ data:
   update-node.sh: |
     #!/bin/sh
     REDIS_NODES="/data/nodes.conf"
-    POD_IP=$(hostname -i)
-    if [ -f "$REDIS_NODES" ]; then
-      sed -i -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/${POD_IP}/" ${REDIS_NODES}
-    fi
+    sed -i -e "/myself/ s/[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}/${POD_IP}/" ${REDIS_NODES}
     exec "$@"
-  redis.conf: |
+  redis.conf: |+
     cluster-enabled yes
     cluster-require-full-coverage no
     cluster-node-timeout 15000
     cluster-config-file /data/nodes.conf
     cluster-migration-barrier 1
     appendonly yes
-    bind 0.0.0.0
     protected-mode no
-    requirepass ServicePassword
-    masterauth ServicePassword
-
 ---
 apiVersion: apps/v1
 kind: StatefulSet
@@ -106,11 +99,11 @@ metadata:
 spec:
   type: LoadBalancer
   ports:
-    - port: 8080
+    - port: 6379
       targetPort: 6379
       protocol: TCP
       name: redis
-    - port: 8081
+    - port: 16379
       targetPort: 16379
       protocol: TCP
       name: gossip
