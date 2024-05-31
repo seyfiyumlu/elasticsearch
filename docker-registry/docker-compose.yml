@@ -38,7 +38,7 @@ services:
     restart: always
     environment:
       - REGISTRY_TITLE=Docker Registry UI
-      - REGISTRY_URL=http://registry:5000
+      - REGISTRY_URL=https://vizyoneks-registry.vizyoneks.com.tr
       - DELETE_IMAGES=true  # İmajları silme desteği
     ports:
       - "8081:80"
