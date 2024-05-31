@@ -33,8 +33,35 @@ services:
       - 8081:8081
     restart: always
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_PORT}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_HOST=10.134.11.215
+      - REDIS_PORT=8080
+      - REDIS_PASSWORD=ServicePassword
     depends_on:
       - redis
+  redis-insight:
+    image: redis/redisinsight:latest
+    container_name: redis-insight
+    ports:
+      - 5540:5540
+    restart: always
+    volumes:
+      - redisdata:/db
+    environment:
+      - REDIS_HOSTS=10.134.11.215:8080
+      - maxRetriesPerRequest=5
+      - maxConnections=100
+      - maxConnectionsPerEndpoint=50
+      - maxConnectionsPerRequest=50
+      - maxRetriesPerEndpoint=5
+      - maxRetryTime=3000
+      - maxRetryDelay=3000
+      - maxPoolSize=100
+      - minPoolSize=1
+      - poolTimeout=500
+      - idleTime=1800000
+      - connectTimeout=1000
+      - enableTLS=false
+      - enableDNSDiscovery=false
+      - enableAutoPipelining=true
+      - enableClientSideCaching=false
+      - enableOptimisticPipelining=false
