@@ -46,3 +46,12 @@ processors:
 
 output.elasticsearch:
   hosts: ${ELASTIC_HOSTS}
+  index: "metricbeat-%{[agent.version]}-%{+yyyy.MM.dd}" # Günlük indeksleme
+
+setup.template.enabled: true
+setup.template.name: "metricbeat"
+setup.template.pattern: "metricbeat-*"
+setup.template.settings:
+  index.number_of_shards: 1
+  index.codec: best_compression
+  _source.enabled: true
