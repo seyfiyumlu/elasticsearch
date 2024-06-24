@@ -32,6 +32,10 @@ services:
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false
       - xpack.license.self_generated.type=${LICENSE}
+      - "ES_JAVA_OPTS=-Xms4g -Xmx4g" # Java heap boyutunu ayarlayın
+      - "indices.breaker.total.limit=70%"
+      - "indices.breaker.fielddata.limit=60%"
+      - "indices.breaker.request.limit=40%"
     mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
