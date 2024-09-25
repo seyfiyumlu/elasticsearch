@@ -10,8 +10,6 @@ networks:
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
-    container_name: elasticsearch-0
-    restart: always
     environment:
       - cluster.name=${CLUSTER_NAME}
       - node.name=elasticsearch-0
@@ -40,14 +38,12 @@ services:
       retries: 120
   kibana:
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
-    container_name: kibana
     labels:
       co.elastic.logs/module: kibana
     volumes:
       - kibanadata:/usr/share/kibana/data
     ports:
       - ${KIBANA_PORT}:5601
-    restart: always
     environment:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=http://elasticsearch:${ES_PORT}
