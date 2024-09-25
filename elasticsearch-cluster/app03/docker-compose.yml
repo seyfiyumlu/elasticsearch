@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    container_name: elasticsearch-2
+    restart: always
+    environment:
+      - cluster.name=${CLUSTER_NAME}
+      - node.name=elasticsearch-2
+      - discovery.seed_hosts=elasticsearch-0,elasticsearch-1,elasticsearch-2
+      - cluster.initial_master_nodes=elasticsearch-0,elasticsearch-1,elasticsearch-2
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - xpack.security.http.ssl.enabled=false
+      - xpack.license.self_generated.type=${LICENSE}
+    ports:
+      - "${ES_PORT}:9200"
+      - "${SEED_PORT}:9300"
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    networks:
+      - elasticsearch-net
+
+volumes:
+  elasticsearch-data:
+
+networks:
+  elasticsearch-net:
+    external: true
