@@ -15,8 +15,8 @@ services:
     environment:
       - cluster.name=${CLUSTER_NAME}
       - node.name=elasticsearch-0
-      - discovery.seed_hosts=172.19.134.143,172.19.134.144,172.19.134.145
-      - cluster.initial_master_nodes=172.19.134.143,172.19.134.144,172.19.134.145
+      - discovery.seed_hosts=172.19.134.143:9300,172.19.134.144:9300,172.19.134.145:9300
+      - cluster.initial_master_nodes=elasticsearch-0,elasticsearch-1,elasticsearch-2
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
