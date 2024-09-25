@@ -4,9 +4,6 @@ volumes:
   elasticsearch-data:
   kibanadata:
 
-networks:
-  elasticsearch-net:
-    external: true
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
@@ -48,13 +45,11 @@ services:
         constraints: [node.role == worker] 
     environment:
       - SERVERNAME=kibana
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - ELASTICSEARCH_HOSTS=http://localhost:${ES_PORT}
     ports:
       - "5601:5601"
     volumes:
       - kibanadata:/usr/share/kibana/data
-    networks:
-      - elasticsearch-net
     healthcheck:
       test: ["CMD-SHELL", "curl -s -I http://localhost:5601 | grep -q 'HTTP/1.1 302 Found'"]
       interval: 10s
