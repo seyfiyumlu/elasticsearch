@@ -18,7 +18,7 @@ services:
       replicas: 3  # 3 node’luk bir cluster oluşturur.
     environment:
       - cluster.name=docker-cluster
-      - node.name=${NODE_NAME:-${HOSTNAME}}
+      - node.name=${DOCKER_TASK_NAME}
       - discovery.seed_hosts=elasticsearch_elasticsearch.1,elasticsearch_elasticsearch.2,elasticsearch_elasticsearch.3
       - cluster.initial_master_nodes=elasticsearch_elasticsearch.1,elasticsearch_elasticsearch.2,elasticsearch_elasticsearch.3
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
