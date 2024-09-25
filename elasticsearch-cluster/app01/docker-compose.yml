@@ -2,108 +2,51 @@ version: '3.8'
 
 volumes:
   elasticsearch-data:
-  elasticsearch-data-1:
-  elasticsearch-data-2:
   kibanadata:
 
 networks:
   elasticsearch-net:
-    driver: overlay  # Overlay network, multi-host communication sağlar.
-
+    external: true
 services:
-  es-01:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
-    deploy:
-      mode: replicated
-      replicas: 1
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
+    container_name: elasticsearch-0
+    restart: always
     environment:
-      - cluster.name=docker-cluster
-      - node.name=es-01
-      - discovery.seed_hosts=es-01,es-02,es-03
-      - cluster.initial_master_nodes=elasticsearch_es-01,elasticsearch_es-02,elasticsearch_es-03
+      - cluster.name=${CLUSTER_NAME}
+      - node.name=elasticsearch-0
+      - discovery.seed_hosts=172.19.134.143,172.19.134.144,172.19.134.145
+      - cluster.initial_master_nodes=e172.19.134.143,172.19.134.144,172.19.134.145
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
       - xpack.security.http.ssl.enabled=false
-      - xpack.license.self_generated.type=basic
+      - xpack.license.self_generated.type=${LICENSE}
     ports:
-      - "9200:9200"
-      - "9300:9300"
+      - "${ES_PORT}:9200"
+      - "${SEED_PORT}:9300"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - elasticsearch-net
+    mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
         hard: -1
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
+      test: ["CMD-SHELL", "curl http://localhost:${ES_PORT}"]
       interval: 10s
       timeout: 10s
       retries: 120
-  es-02:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
-    deploy:
-      mode: replicated
-      replicas: 1
-    environment:
-      - cluster.name=docker-cluster
-      - node.name=es-02
-      - discovery.seed_hosts=es-01,es-02,es-03
-      - cluster.initial_master_nodes=elasticsearch_es-01,elasticsearch_es-02,elasticsearch_es-03
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
-      - xpack.license.self_generated.type=basic
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
-    networks:
-      - elasticsearch-net
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
-      interval: 10s
-      timeout: 10s
-      retries: 120
-  es-03:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
-    deploy:
-      mode: replicated
-      replicas: 1
-    environment:
-      - cluster.name=docker-cluster
-      - node.name=es-03
-      - discovery.seed_hosts=es-01,es-02,es-03
-      - cluster.initial_master_nodes=elasticsearch_es-01,elasticsearch_es-02,elasticsearch_es-03
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-      - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
-      - xpack.license.self_generated.type=basic
-    ports:
-      - "9200:9200"
-      - "9300:9300"
-    volumes:
-      - elasticsearch-data:/usr/share/elasticsearch/data
-    networks:
-      - elasticsearch-net
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-    healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9200 || exit 1"]
-      interval: 10s
-      timeout: 10s
-      retries: 120
+
+volumes:
+  elasticsearch-data:
+
+networks:
+  elasticsearch-net:
+    external: true
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.5.2
     deploy:

@@ -1,5 +1,11 @@
 version: '3.8'
+volumes:
+  elasticsearch-data:
+  kibanadata:
 
+networks:
+  elasticsearch-net:
+    external: true
 services:
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
@@ -8,8 +14,8 @@ services:
     environment:
       - cluster.name=${CLUSTER_NAME}
       - node.name=elasticsearch-2
-      - discovery.seed_hosts=elasticsearch-0,elasticsearch-1,elasticsearch-2
-      - cluster.initial_master_nodes=elasticsearch-0,elasticsearch-1,elasticsearch-2
+      - discovery.seed_hosts=172.19.134.143,172.19.134.144,172.19.134.145
+      - cluster.initial_master_nodes=e172.19.134.143,172.19.134.144,172.19.134.145
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - bootstrap.memory_lock=true
       - xpack.security.enabled=false
