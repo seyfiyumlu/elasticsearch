@@ -29,7 +29,6 @@ services:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
       - elasticsearch-net
-    mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
         soft: -1
