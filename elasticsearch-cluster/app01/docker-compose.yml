@@ -39,9 +39,6 @@ services:
       timeout: 10s
       retries: 120
   kibana:
-    depends_on:
-      elasticsearch:
-        condition: service_healthy
     image: docker.elastic.co/kibana/kibana:${STACK_VERSION}
     container_name: kibana
     labels:
