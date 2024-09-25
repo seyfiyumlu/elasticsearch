@@ -16,8 +16,6 @@ services:
     deploy:
       mode: replicated
       replicas: 3  # 3 node’luk bir cluster oluşturur.
-      placement:
-        constraints: [node.role == worker]  # Node'ların worker node'lar üzerinde çalışmasını zorunlu kılar (isteğe bağlı).
     environment:
       - cluster.name=docker-cluster
       - node.name=elasticsearch-${HOSTNAME}
