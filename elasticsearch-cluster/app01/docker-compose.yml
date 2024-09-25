@@ -40,13 +40,6 @@ services:
       timeout: 10s
       retries: 120
 
-volumes:
-  elasticsearch-data:
-
-networks:
-  elasticsearch-net:
-    external: true
-
   kibana:
     image: docker.elastic.co/kibana/kibana:7.5.2
     deploy:

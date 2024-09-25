@@ -40,10 +40,3 @@ services:
       interval: 10s
       timeout: 10s
       retries: 120
-
-volumes:
-  elasticsearch-data:
-
-networks:
-  elasticsearch-net:
-    external: true
