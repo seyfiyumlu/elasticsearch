@@ -12,6 +12,7 @@ services:
     image: docker.elastic.co/elasticsearch/elasticsearch:${STACK_VERSION}
     container_name: elasticsearch-0
     restart: always
+    network_mode: host
     environment:
       - cluster.name=${CLUSTER_NAME}
       - node.name=elasticsearch-0
@@ -27,8 +28,6 @@ services:
       - "${SEED_PORT}:9300"
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
-    networks:
-      - elasticsearch-net
     mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
