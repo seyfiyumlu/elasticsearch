@@ -14,6 +14,8 @@ services:
       - "5672:5672"
     command: >
       sh -c "rabbitmq-server & sleep 30 &&
+      chmod 400 /var/lib/rabbitmq/.erlang.cookie &&
+      chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie &&
       rabbitmqctl stop_app &&
       rabbitmqctl reset &&
       rabbitmqctl start_app &&
