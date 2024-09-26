@@ -31,13 +31,13 @@ services:
   redis-insight:
       image: redis/redisinsight:latest
       container_name: redis-insight
-      ports:
-        - 8080:8080
+      network_mode: host
       restart: always
       volumes:
         - ./redisdata:/db
       environment:
         - REDIS_HOSTS=redis-master1:6379
+        - RI_APP_PORT=8080
         - maxRetriesPerRequest=5
         - maxConnections=100
         - maxConnectionsPerEndpoint=50
