@@ -1,7 +1,4 @@
 services:
-  networks:
-  rabbitmq_network:
-    driver: bridge
 
   rabbitmq1:
     image: rabbitmq:3.13.2-management
@@ -25,3 +22,7 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+
+networks:
+  rabbitmq_network:
+    external: true
