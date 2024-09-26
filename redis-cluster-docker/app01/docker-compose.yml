@@ -27,3 +27,31 @@ services:
       - ./replica1/data:/data
       - ./replica1/redis.conf:/usr/local/etc/redis/redis.conf
     mem_limit: ${REDIS_MEM_LIMIT}
+
+  redis-insight:
+      image: redis/redisinsight:latest
+      container_name: redis-insight
+      ports:
+        - 8080:8080
+      restart: always
+      volumes:
+        - redisdata:/db
+      environment:
+        - REDIS_HOSTS=172.19.134.142:6379
+        - maxRetriesPerRequest=5
+        - maxConnections=100
+        - maxConnectionsPerEndpoint=50
+        - maxConnectionsPerRequest=50
+        - maxRetriesPerEndpoint=5
+        - maxRetryTime=3000
+        - maxRetryDelay=3000
+        - maxPoolSize=100
+        - minPoolSize=1
+        - poolTimeout=500
+        - idleTime=1800000
+        - connectTimeout=1000
+        - enableTLS=false
+        - enableDNSDiscovery=false
+        - enableAutoPipelining=true
+        - enableClientSideCaching=false
+        - enableOptimisticPipelining=false
