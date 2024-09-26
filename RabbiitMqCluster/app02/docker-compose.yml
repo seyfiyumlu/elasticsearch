@@ -4,9 +4,10 @@ services:
     hostname: rabbitmq2
     network_mode: host
     environment:
-      RABBITMQ_ERLANG_COOKIE: "secret"
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
+    volumes:
+      - ./erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
     ports:
       - "15672:15672"
       - "5672:5672"

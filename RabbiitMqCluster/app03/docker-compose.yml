@@ -5,9 +5,10 @@ services:
     hostname: rabbitmq3
     network_mode: host
     environment:
-      RABBITMQ_ERLANG_COOKIE: "secret"
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
+    volumes:
+      - ./erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -15,6 +16,7 @@ services:
       sh -c "rabbitmq-server & sleep 30 &&
       rabbitmqctl stop_app &&
       rabbitmqctl reset &&
+
       while ! rabbitmqctl node_health_check --node rabbit@kmrabbitmqs01; do sleep 5; done &&
       rabbitmqctl join_cluster rabbit@kmrabbitmqs01 &&
       rabbitmqctl start_app &&
