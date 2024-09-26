@@ -14,8 +14,8 @@ services:
       sh -c "rabbitmq-server & sleep 30 &&
       rabbitmqctl stop_app &&
       rabbitmqctl reset &&
-      while ! rabbitmqctl node_health_check --node rabbit@172.19.134.147; do sleep 5; done &&
-      rabbitmqctl join_cluster rabbit@172.19.134.147 &&
+      while ! rabbitmqctl node_health_check --node rabbit@kmrabbitmqs01; do sleep 5; done &&
+      rabbitmqctl join_cluster rabbit@kmrabbitmqs01 &&
       rabbitmqctl start_app &&
       tail -f /dev/null"
     deploy:
