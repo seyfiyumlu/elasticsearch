@@ -1,10 +1,15 @@
 services:
+  networks:
+  rabbitmq_network:
+    driver: bridge
+
   rabbitmq1:
     image: rabbitmq:3.13.2-management
     hostname: rabbitmq1
-    network_mode: host
+    networks:
+      - rabbitmq_network
     environment:
-      RABBITMQ_ERLANG_COOKIE: "skIJni56i1Zas1Z3PTLoJSgMx9O8"
+      RABBITMQ_ERLANG_COOKIE: "${RABBITMQ_ERLANG_COOKIE}"
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
     ports:
