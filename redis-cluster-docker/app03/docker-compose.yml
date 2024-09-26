@@ -3,6 +3,7 @@ services:
     image: redis:${REDIS_VERSION}
     container_name: redis-master3
     hostname: redis-master3
+    network_mode: host
     command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--cluster-enabled", "yes", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}"]
     environment:
       - REDIS_PASSWORD=${REDIS_PASSWORD}
