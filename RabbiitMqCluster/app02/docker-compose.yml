@@ -2,10 +2,9 @@ services:
   rabbitmq2:
     image: rabbitmq:3.13.2-management
     hostname: rabbitmq2
-    networks:
-      - rabbitmq_network
+    network_mode: host
     environment:
-      RABBITMQ_ERLANG_COOKIE: "${RABBITMQ_ERLANG_COOKIE}"
+      RABBITMQ_ERLANG_COOKIE: "secret"
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
     ports:
@@ -23,7 +22,3 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
-
-networks:
-  rabbitmq_network:
-    external: true
