@@ -8,14 +8,12 @@ services:
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
     volumes:
-      - ./erlang.cookie:/var/lib/rabbitmq/.erlang.cookie:ro
+      - ./erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
     ports:
       - "15672:15672"
       - "5672:5672"
     command: >
       sh -c "rabbitmq-server & sleep 30 &&
-      chmod 400 /var/lib/rabbitmq/.erlang.cookie &&
-      chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie &&
       rabbitmqctl stop_app &&
       rabbitmqctl reset &&
       rabbitmqctl start_app &&

@@ -7,7 +7,7 @@ services:
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
     volumes:
-      - ./erlang.cookie:/var/lib/rabbitmq/.erlang.cookie:ro
+      - ./erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
     ports:
       - "15672:15672"
       - "5672:5672"
@@ -15,8 +15,6 @@ services:
       sh -c "rabbitmq-server & sleep 30 &&
       rabbitmqctl stop_app &&
       rabbitmqctl reset &&
-      chmod 400 /var/lib/rabbitmq/.erlang.cookie &&
-      chown rabbitmq:rabbitmq /var/lib/rabbitmq/.erlang.cookie &&
       while ! rabbitmqctl node_health_check --node rabbit@172.19.134.147; do sleep 5; done &&
       rabbitmqctl join_cluster rabbit@172.19.134.147 &&
       rabbitmqctl start_app &&
