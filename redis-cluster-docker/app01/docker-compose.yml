@@ -37,7 +37,7 @@ services:
       volumes:
         - ./redisdata:/db
       environment:
-        - REDIS_HOSTS=172.19.134.142:6379
+        - REDIS_HOSTS=redis-master1:6379
         - maxRetriesPerRequest=5
         - maxConnections=100
         - maxConnectionsPerEndpoint=50
