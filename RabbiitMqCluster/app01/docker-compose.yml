@@ -4,7 +4,7 @@ services:
     hostname: rabbitmq1
     network_mode: host
     environment:
-      RABBITMQ_ERLANG_COOKIE: "${RABBITMQ_ERLANG_COOKIE}"
+      RABBITMQ_ERLANG_COOKIE: "skIJni56i1Zas1Z3PTLoJSgMx9O8"
       RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
       RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
     ports:
