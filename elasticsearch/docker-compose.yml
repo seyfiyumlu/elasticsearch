@@ -29,12 +29,14 @@ services:
       - cluster.name=${CLUSTER_NAME}
       - discovery.type=single-node
       - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
       - xpack.license.self_generated.type=${LICENSE}
       - "indices.breaker.total.limit=100%" # Devre kesici limiti artırıldı
       - "indices.breaker.fielddata.limit=60%" # Devre kesici limiti artırıldı
       - "indices.breaker.request.limit=60%" # Devre kesici limiti artırıldı
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+
     mem_limit: ${ES_MEM_LIMIT}
     ulimits:
       memlock:
@@ -61,6 +63,9 @@ services:
     environment:
       - SERVERNAME=kibana
       - ELASTICSEARCH_HOSTS=http://es01:9200
+      - ELASTICSEARCH_USERNAME=elastic  # Varsayılan kullanıcı
+      - ELASTICSEARCH_PASSWORD=${ELASTIC_PASSWORD}  # Elasticsearch parolası
+      - xpack.security.enabled=true
     mem_limit: ${KB_MEM_LIMIT}
     healthcheck:
       test:
