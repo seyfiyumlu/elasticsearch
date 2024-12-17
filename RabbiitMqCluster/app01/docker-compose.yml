@@ -1,0 +1,24 @@
+services:
+
+  rabbitmq1:
+    image: rabbitmq:3.13.2-management
+    hostname: rabbitmq1
+    network_mode: host
+    environment:
+      RABBITMQ_DEFAULT_USER: "${RABBITMQ_DEFAULT_USER}"
+      RABBITMQ_DEFAULT_PASS: "${RABBITMQ_DEFAULT_PASS}"
+    volumes:
+      - ./erlang.cookie:/var/lib/rabbitmq/.erlang.cookie
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    command: >
+      sh -c "rabbitmq-server & sleep 30 &&
+      rabbitmqctl stop_app &&
+      rabbitmqctl reset &&
+      rabbitmqctl start_app &&
+      tail -f /dev/null"
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure

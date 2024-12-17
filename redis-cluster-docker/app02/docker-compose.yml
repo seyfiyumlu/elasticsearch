@@ -1,0 +1,29 @@
+services:
+  redis-master2:
+    image: redis:${REDIS_VERSION}
+    container_name: redis-master2
+    hostname: redis-master2
+    network_mode: host
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--port", "6381", "--cluster-enabled", "yes", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}"]
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ./master1/data:/data
+      - ./master1/redis.conf:/usr/local/etc/redis/redis.conf
+
+  redis-replica2:
+    image: redis:${REDIS_VERSION}
+    container_name: redis-replica2
+    hostname: redis-replica2
+    network_mode: host
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--port", "6382", "--cluster-enabled", "yes", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}"]
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_REPLICA_PORT}:6379"
+    volumes:
+      - ./replica1/data:/data
+      - ./replica1/redis.conf:/usr/local/etc/redis/redis.conf
+    mem_limit: ${REDIS_MEM_LIMIT}

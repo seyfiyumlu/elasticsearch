@@ -1,0 +1,57 @@
+services:
+  redis-master1:
+    image: redis:${REDIS_VERSION}
+    container_name: redis-master1
+    hostname: redis-master1
+    network_mode: host
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--port", "6379", "--cluster-enabled", "yes", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}"]
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT}:6379"
+    volumes:
+      - ./master1/data:/data
+      - ./master1/redis.conf:/usr/local/etc/redis/redis.conf
+
+  redis-replica1:
+    image: redis:${REDIS_VERSION}
+    container_name: redis-replica1
+    hostname: redis-replica1
+    network_mode: host
+    command: ["redis-server", "/usr/local/etc/redis/redis.conf", "--port", "6380", "--cluster-enabled", "yes", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD}", "--masterauth", "${REDIS_PASSWORD}"]
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_REPLICA_PORT}:6379"
+    volumes:
+      - ./replica1/data:/data
+      - ./replica1/redis.conf:/usr/local/etc/redis/redis.conf
+    mem_limit: ${REDIS_MEM_LIMIT}
+
+  redis-insight:
+      image: redis/redisinsight:latest
+      container_name: redis-insight
+      network_mode: host
+      restart: always
+      volumes:
+        - ./redisdata:/db
+      environment:
+        - REDIS_HOSTS=redis-master1:6379
+        - RI_APP_PORT=8080
+        - maxRetriesPerRequest=5
+        - maxConnections=100
+        - maxConnectionsPerEndpoint=50
+        - maxConnectionsPerRequest=50
+        - maxRetriesPerEndpoint=5
+        - maxRetryTime=3000
+        - maxRetryDelay=3000
+        - maxPoolSize=100
+        - minPoolSize=1
+        - poolTimeout=500
+        - idleTime=1800000
+        - connectTimeout=1000
+        - enableTLS=false
+        - enableDNSDiscovery=false
+        - enableAutoPipelining=true
+        - enableClientSideCaching=false
+        - enableOptimisticPipelining=false
