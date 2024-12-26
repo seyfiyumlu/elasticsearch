@@ -13,6 +13,7 @@ services:
   redis:
     image: redis:${REDIS_VERSION}
     container_name: redis
+    restart: always
     ports:
       - 6379:6379
     environment:
@@ -33,9 +34,8 @@ services:
       - 5540:5540
     restart: always
     volumes:
-      - redisdata:/db
+      - ./redisdata/redisinsight.db:/data/redisinsight.db
     environment:
-      - REDIS_HOSTS=10.134.11.215:8080
       - maxRetriesPerRequest=5
       - maxConnections=100
       - maxConnectionsPerEndpoint=50
@@ -53,3 +53,14 @@ services:
       - enableAutoPipelining=true
       - enableClientSideCaching=false
       - enableOptimisticPipelining=false
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - ./config/nginx.conf:/etc/nginx/nginx.conf
+      - ./logs/nginx:/var/log/nginx
+    depends_on:
+      - redis
