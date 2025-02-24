@@ -1,0 +1,4 @@
+Redis/logs/nginx/error.log
+Redis/logs/nginx/redis-insight-access.log
+Redis/logs/nginx/redis-insight-error.log
+Redis/redisdata/redisinsight.db

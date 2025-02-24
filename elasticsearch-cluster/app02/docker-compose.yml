@@ -21,9 +21,10 @@ services:
       - cluster.initial_master_nodes=elasticsearch-0,elasticsearch-1,elasticsearch-2
       - ES_JAVA_OPTS=-Xms512m -Xmx512m
       - bootstrap.memory_lock=true
-      - xpack.security.enabled=false
+      - xpack.security.enabled=true
       - xpack.security.http.ssl.enabled=false
       - xpack.license.self_generated.type=${LICENSE}
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
     ports:
       - "${ES_PORT}:9200"
       - "${SEED_PORT}:9300"
