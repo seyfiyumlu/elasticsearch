@@ -2,26 +2,6 @@ namespace: rabbitmq-system
 appname: rabbitmq-vzx
 rabbitmqErlangCookie: "secretcookie"
 
-extraManifests:
-  - |
-    apiVersion: batch/v1
-    kind: Job
-    metadata:
-      name: rabbitmq-scc-assign
-      namespace: rabbitmq-system
-    spec:
-      template:
-        spec:
-          serviceAccountName: default
-          containers:
-            - name: scc-patch
-              image: registry.redhat.io/openshift4/ose-cli
-              command:
-                - /bin/sh
-                - -c
-                - |
-                  echo "Assigning anyuid SCC to rabbitmq-sa..."
-                  oc adm policy add-scc-to-user anyuid -z rabbitmq-sa -n rabbitmq-system
-              imagePullPolicy: IfNotPresent
-          restartPolicy: OnFailure
-          
+sccJob:
+  enabled: true
+
