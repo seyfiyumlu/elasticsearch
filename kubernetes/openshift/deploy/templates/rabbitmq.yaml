@@ -1,0 +1,125 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: rabbitmq-role
+  namespace: {{ .Values.namespace }}
+rules:
+- apiGroups: [""]
+  resources: ["endpoints", "pods"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["apps"]
+  resources: ["statefulsets"]
+  verbs: ["get", "list", "watch"]
+
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: rabbitmq-rolebinding
+  namespace: {{ .Values.namespace }}
+subjects:
+- kind: ServiceAccount
+  name: rabbitmq-sa
+  namespace: {{ .Values.namespace }}
+roleRef:
+  kind: Role
+  name: rabbitmq-role
+  apiGroup: rbac.authorization.k8s.io
+
+---
+
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: {{ .Values.appname }}
+  namespace: {{ .Values.namespace }}
+labels:
+  app.kubernetes.io/name: {{ .Values.appname }}
+spec:
+  replicas: 3
+  image: rabbitmq:3.13.2-management
+  rabbitmq:
+      additionalConfig: |
+        cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
+        cluster_formation.k8s.host = kubernetes.default.svc.cluster.local
+        cluster_formation.k8s.address_type = hostname
+        cluster_partition_handling = pause_minority
+        vm_memory_high_watermark_paging_ratio = 0.99
+        disk_free_limit.relative = 1.0
+        collect_statistics_interval = 10000
+  serviceAccountName: rabbitmq-sa
+  persistence:
+    storage: 5Gi
+  override:
+    statefulSet:
+      spec:
+        template:
+          spec:
+            serviceAccountName: rabbitmq-sa
+            securityContext:
+              runAsUser: 1000
+              fsGroup: 1000
+            containers:
+            - name: {{ .Values.appname }}
+              env:
+                - name: RABBITMQ_USE_LONGNAME
+                  value: "true"
+                - name: RABBITMQ_ERLANG_COOKIE
+                  valueFrom:
+                    secretKeyRef:
+                      name: rabbitmq-erlang-cookie
+                      key: .erlang.cookie
+              resources:
+                limits:
+                  cpu: 500m
+                  memory: 512Mi
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-amqp
+  namespace: {{ .Values.namespace }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5672
+      targetPort: 5672
+  selector:
+    app.kubernetes.io/name: {{ .Values.appname }}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-mgmt
+  namespace: {{ .Values.namespace }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: 15672
+      targetPort: 15672
+  selector:
+    app.kubernetes.io/name: {{ .Values.appname }}
+
+---
+
+apiVersion: v1
+kind: Route
+metadata:
+  name: rabbitmq-mgmt
+  namespace: {{ .Values.namespace }}
+spec:
+  to:
+    kind: Service
+    name: rabbitmq-mgmt
+  port:
+    targetPort: 15672
+  tls:
+    termination: edge
+  wildcardPolicy: None
