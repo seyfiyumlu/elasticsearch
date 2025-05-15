@@ -1,7 +1,6 @@
 namespace: rabbitmq-system
 appname: rabbitmq-vzx
 rabbitmqErlangCookie: "secretcookie"
-
 sccJob:
   enabled: true
 
