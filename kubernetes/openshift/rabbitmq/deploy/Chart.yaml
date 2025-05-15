@@ -2,5 +2,4 @@ apiVersion: v2
 name: vizyoneks-rabbitmq
 description: Vizyoneks rabbitmq deployment
 type: application
-version: 1.0.0
-# This is the chart's default values.yaml file.
+version: 1.0.1
