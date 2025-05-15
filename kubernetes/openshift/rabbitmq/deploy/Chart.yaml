@@ -2,4 +2,4 @@ apiVersion: v2
 name: vizyoneks-rabbitmq
 description: Vizyoneks rabbitmq deployment
 type: application
-version: 1.0.3
+version: 1.0.4
