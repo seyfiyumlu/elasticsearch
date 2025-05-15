@@ -16,7 +16,7 @@ spec:
             - -c
             - |
               echo "Assigning anyuid SCC to rabbitmq-sa..."
-              oc adm policy add-scc-to-user anyuid -z rabbitmq-sa -n {{ .Values.Namespace }}
+              oc adm policy add-scc-to-user anyuid -z rabbitmq-sa -n {{ .Values.Namespace | quote }}
           imagePullPolicy: IfNotPresent
       restartPolicy: OnFailure
 {{- end }}
