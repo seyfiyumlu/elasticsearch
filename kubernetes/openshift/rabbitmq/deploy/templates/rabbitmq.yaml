@@ -68,8 +68,6 @@ spec:
               fsGroup: 1000
             containers:
             - name: {{ .Values.appname }}
-              image: rabbitmq:3.13.2-management
-              imagePullPolicy: IfNotPresent
               env:
                 - name: RABBITMQ_USE_LONGNAME
                   value: "true"
