@@ -3,7 +3,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: rabbitmq-scc-assign
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.Namespace }}
 spec:
   template:
     spec:
@@ -16,7 +16,7 @@ spec:
             - -c
             - |
               echo "Assigning anyuid SCC to rabbitmq-sa..."
-              oc adm policy add-scc-to-user anyuid -z rabbitmq-sa -n {{ .Release.Namespace }}
+              oc adm policy add-scc-to-user anyuid -z rabbitmq-sa -n {{ .Values.Namespace }}
           imagePullPolicy: IfNotPresent
       restartPolicy: OnFailure
 {{- end }}
