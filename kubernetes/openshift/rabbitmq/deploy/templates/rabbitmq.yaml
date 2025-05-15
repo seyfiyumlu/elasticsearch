@@ -67,6 +67,7 @@ spec:
               runAsUser: 1000
               fsGroup: 1000
             containers:
+            - image: rabbitmq:3.13.2-management
             - name: {{ .Values.appname }}
               env:
                 - name: RABBITMQ_USE_LONGNAME
