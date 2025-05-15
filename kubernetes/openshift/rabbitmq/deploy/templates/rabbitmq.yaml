@@ -109,7 +109,7 @@ spec:
 
 ---
 
-apiVersion: v1
+apiVersion: route.openshift.io/v1
 kind: Route
 metadata:
   name: rabbitmq-mgmt
@@ -122,4 +122,4 @@ spec:
     targetPort: 15672
   tls:
     termination: edge
-  wildcardPolicy: None
+    insecureEdgeTerminationPolicy: Redirect
