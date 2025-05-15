@@ -72,10 +72,11 @@ spec:
                 - name: RABBITMQ_USE_LONGNAME
                   value: "true"
                 - name: RABBITMQ_ERLANG_COOKIE
-                  valueFrom:
-                    secretKeyRef:
-                      name: rabbitmq-erlang-cookie
-                      key: .erlang.cookie
+                  value: "{{ .Values.rabbitmqErlangCookie }}"
+                - name: RABBITMQ_DEFAULT_USER
+                  value: "admin"
+                - name: RABBITMQ_DEFAULT_PASS
+                  value: "admin"
               resources:
                 limits:
                   cpu: 500m
